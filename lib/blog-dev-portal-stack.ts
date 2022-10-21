@@ -1,16 +1,17 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { Catalog } from './catalog';
 
 export class BlogDevPortalStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'BlogDevPortalQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    // Construct is split out for blog-demo purposes.
+    // CatalogOne for initial deploy
+    // new CatalogOne(this, `Catalog`);
+    // new CatalogTwo(this, `Catalog`);
+    
+    // Catalog is the final iteration.
+    new Catalog(this, `Catalog`);
   }
 }
