@@ -38,7 +38,7 @@ export class CatalogOne extends Construct {
     const execOptions: ExecSyncOptions = {
       stdio: ["ignore", process.stderr, "inherit"],
     };
-    const uiPath = join(__dirname, `../catalog/out`);
+    const uiPath = join(__dirname, `../../../catalog/out`);
     const bundle = Source.asset(uiPath, {
       bundling: {
         command: ["sh", "-c", 'echo "Not Used"'],
