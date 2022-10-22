@@ -40,7 +40,7 @@ module.exports = {
     },
     {
       id: 'martzcodes',
-      name: 'Matthew Martz',
+      name: 'Matt Martz',
       avatarUrl: 'https://pbs.twimg.com/profile_images/1463978501120438278/JjNr_zM9_400x400.jpg',
       role: 'Principal Engineer',
     },
