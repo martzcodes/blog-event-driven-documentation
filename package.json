@@ -1,8 +1,8 @@
 {
-  "name": "blog-dev-portal",
+  "name": "blog-dev-catalog",
   "version": "0.1.0",
   "bin": {
-    "blog-dev-portal": "bin/blog-dev-portal.js"
+    "blog-dev-catalog": "bin/blog-dev-catalog.js"
   },
   "scripts": {
     "clean": "rimraf cdk.out catalog/out && mkdir -p catalog/out",

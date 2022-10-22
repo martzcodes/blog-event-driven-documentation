@@ -15,9 +15,14 @@ import { join } from "path";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 
+export interface CatalogProps {
+  hostDomain?: string;
+}
+
 export class Catalog extends Construct {
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: CatalogProps) {
     super(scope, id);
+    const { hostDomain = "martz.dev" } = props;
     const destinationBucket = new Bucket(this, `EventCatalogBucket`, {
       removalPolicy: RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
@@ -30,7 +35,7 @@ export class Catalog extends Construct {
       `OriginAccessIdentity`
     );
     destinationBucket.grantRead(originAccessIdentity);
-    const hostDomain = "martz.dev";
+
     const domainName = `catalog.${hostDomain}`;
     const hostedZone = HostedZone.fromLookup(this, `UIZone`, {
       domainName: hostDomain,
@@ -58,8 +63,8 @@ export class Catalog extends Construct {
       `EventCatalogDistribution`,
       {
         defaultRootObject: "index.html",
-          certificate,
-          domainNames: [domainName],
+        certificate,
+        domainNames: [domainName],
         defaultBehavior: {
           origin: new S3Origin(destinationBucket, { originAccessIdentity }),
           viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
