@@ -11,6 +11,8 @@ export const makeDomain = (account: string) => {
       `name: ${domain}`,
       `summary: |`,
       `  This is the automatically stubbed documentation. Please replace this by clicking the edit button above.`,
+      `owners:`,
+      `  - martzcodes`,
       `---`,
     ];
     writeFileSync(join(domainPath, `./index.md`), domainMd.join("\n"));

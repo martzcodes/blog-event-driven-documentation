@@ -9,7 +9,13 @@ import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
 import { makeDomain } from "./domain";
 
-export const processOpenApi = async ({s3Client, Bucket}: {s3Client: S3Client; Bucket: string; }) => {
+export const processOpenApi = async ({
+  s3Client,
+  Bucket,
+}: {
+  s3Client: S3Client;
+  Bucket: string;
+}) => {
   try {
     const listBucketObjectsCommand = new ListObjectsCommand({
       Bucket,
@@ -46,6 +52,8 @@ export const processOpenApi = async ({s3Client, Bucket}: {s3Client: S3Client; Bu
           `name: ${apiName}`,
           `summary: |`,
           `  This is the automatically stubbed documentation for the ${apiName} API (${specMeta.apiId}) in the ${specMeta.stack} stack. Please replace this.`,
+          `owners:`,
+          `  - martzcodes`,
           `---`,
           ``,
           `<OpenAPI />`,
