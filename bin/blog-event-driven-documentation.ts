@@ -12,4 +12,4 @@ new BlogDevCatalogStack(app, 'BlogDevCatalogWatcherStack', {
   }
 });
 
-new AccountStack(app, `BlogAccountStack`);
+new AccountStack(app, `BlogDevCatalogAccountStack`);

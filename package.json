@@ -8,7 +8,7 @@
     "clean": "rimraf cdk.out catalog/out && mkdir -p catalog/out",
     "deploy": "npm run clean && cdk deploy --all",
     "synth": "npm run clean && cdk synth",
-    "prepare:catalog": "ts-node ./lib/prepare",
+    "prepare:catalog": "ts-node ./lib/prepare $SPEC_BUCKET",
     "test": "jest",
     "cdk": "cdk"
   },

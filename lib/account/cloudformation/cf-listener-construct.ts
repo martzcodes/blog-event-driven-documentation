@@ -1,5 +1,6 @@
 import { IEventBus, Rule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
+import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
@@ -30,7 +31,15 @@ export class CFListener extends Construct {
         runtime: Runtime.NODEJS_16_X,
         entry: join(__dirname, `./cf-listener-lambda.ts`),
         logRetention: RetentionDays.ONE_DAY,
+        initialPolicy: [
+          new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: ['cloudformation:Describe*', 'cloudformation:Get*', 'cloudformation:List*', 'apigateway:Get*'],
+            resources: ['*']
+          }),
+        ],
     });
+    specBucket.grantReadWrite(cfFn);
     cfFn.addEnvironment('SPEC_BUCKET', specBucket.bucketName);
     bus.grantPutEventsTo(cfFn);
 
@@ -40,7 +49,7 @@ export class CFListener extends Construct {
         source: ["aws.cloudformation"],
         detailType: ["CloudFormation Stack Status Change"],
         detail: {
-          "stack-details": {
+          "status-details": {
             status: [...CLOUDFORMATION_SUCCESS],
           },
         },

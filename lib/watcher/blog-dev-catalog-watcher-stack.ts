@@ -1,6 +1,7 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Catalog } from './catalog/catalog-construct';
+import { WatcherSpecConstruct } from './spec/watcher-spec-construct';
 
 export interface BlogDevCatalogStackProps extends StackProps {
   hostDomain?: string;
@@ -21,5 +22,7 @@ export class BlogDevCatalogStack extends Stack {
     new Catalog(this, `Catalog`, {
       hostDomain,
     });
+
+    new WatcherSpecConstruct(this, `SpecWatcher`, {});
   }
 }

@@ -52,13 +52,14 @@ export class WatcherSpecConstruct extends Construct {
     detailType: BlogDetailTypes;
     lambdaName: string;
   }) {
-    const cfFn = new NodejsFunction(this, lambdaName, {
+    const fn = new NodejsFunction(this, lambdaName, {
       runtime: Runtime.NODEJS_16_X,
       entry: join(__dirname, `./${lambdaName}.ts`),
       logRetention: RetentionDays.ONE_DAY,
     });
-    cfFn.addEnvironment("SPEC_BUCKET", this.specBucket.bucketName);
-    this.bus.grantPutEventsTo(cfFn);
+    this.specBucket.grantWrite(fn);
+    fn.addEnvironment("SPEC_BUCKET", this.specBucket.bucketName);
+    this.bus.grantPutEventsTo(fn);
 
     new Rule(this, `${lambdaName}Rule`, {
       eventBus: this.bus,
@@ -66,7 +67,7 @@ export class WatcherSpecConstruct extends Construct {
         source: [Source],
         detailType: [detailType],
       },
-      targets: [new LambdaFunction(cfFn)],
+      targets: [new LambdaFunction(fn)],
     });
   }
 }

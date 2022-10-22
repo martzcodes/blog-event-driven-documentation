@@ -7,6 +7,9 @@ console.log(`Bucket ${Bucket}`);
 const s3Client = new S3Client({ region: "us-east-1" });
 
 const main = async () => {
+  if (!Bucket) {
+    return;
+  }
   await processOpenApi({ s3Client, Bucket });
   console.log("processed OpenApi");
 };

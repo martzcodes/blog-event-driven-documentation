@@ -4,7 +4,6 @@ import {
   GetRestApisCommand,
 } from "@aws-sdk/client-api-gateway";
 import {
-  Change,
   CloudFormationClient,
   DescribeChangeSetCommand,
   DescribeStacksCommand,
@@ -128,7 +127,7 @@ export const handler = async (
 
   const fileLoc = {
     Bucket: process.env.SPEC_BUCKET,
-    Key: `openapi/${StackName}/specs.json`,
+    Key: `openapi/${stack.StackName}/specs.json`,
   };
 
   const putObjectCommand = new PutObjectCommand({
@@ -143,7 +142,7 @@ export const handler = async (
   const url = await getSignedUrl(s3, getObjectCommand, { expiresIn: 60 * 60 });
 
   const eventDetail: OpenApiEvent = {
-    stackName: stack.StackName || StackName,
+    stackName: stack.StackName!,
     apiSpecs: Object.keys(apiSpecs).length,
     url,
   };
