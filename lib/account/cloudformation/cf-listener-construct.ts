@@ -1,32 +1,51 @@
 import { IEventBus, Rule } from "aws-cdk-lib/aws-events";
+import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
+import { Runtime } from "aws-cdk-lib/aws-lambda";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
+import { join } from "path";
 
-const CLOUDFORMATION_SUCCESS = ["CREATE_COMPLETE", "UPDATE_COMPLETE", "IMPORT_COMPLETE"];
+const CLOUDFORMATION_SUCCESS = [
+  "CREATE_COMPLETE",
+  "UPDATE_COMPLETE",
+  "IMPORT_COMPLETE",
+];
 
 export interface CloudFormationListenerProps {
-    bus: IEventBus;
-    specBucket: Bucket;
+  bus: IEventBus;
+  specBucket: Bucket;
 }
 export class CFListener extends Construct {
-    constructor(scope: Construct, id: string, props: CloudFormationListenerProps) {
-        super(scope, id);
+  constructor(
+    scope: Construct,
+    id: string,
+    props: CloudFormationListenerProps
+  ) {
+    super(scope, id);
+    const { bus, specBucket } = props;
 
-        // create the lambda
-        // add bus/bucket perms / env vars to lambda
+    const cfFn = new NodejsFunction(this, `cfStatusFn`, {
+        runtime: Runtime.NODEJS_16_X,
+        entry: join(__dirname, `./cf-listener-lambda.ts`),
+        logRetention: RetentionDays.ONE_DAY,
+    });
+    cfFn.addEnvironment('SPEC_BUCKET', specBucket.bucketName);
+    bus.grantPutEventsTo(cfFn);
 
-        const cfRule = new Rule(this, `cfRule`, {
-            eventBus: props.bus,
-            eventPattern: {
-                source: ["aws.cloudformation"],
-                detailType: ["CloudFormation Stack Status Change"],
-                detail: {
-                    "stack-details": {
-                        status: [...CLOUDFORMATION_SUCCESS],
-                    }
-                }
-            }
-        });
-        
-    }
+    new Rule(this, `cfRule`, {
+      eventBus: props.bus,
+      eventPattern: {
+        source: ["aws.cloudformation"],
+        detailType: ["CloudFormation Stack Status Change"],
+        detail: {
+          "stack-details": {
+            status: [...CLOUDFORMATION_SUCCESS],
+          },
+        },
+      },
+      targets: [new LambdaFunction(cfFn)]
+    });
+  }
 }

@@ -22,6 +22,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { EventBridgeEvent } from "aws-lambda";
+import { BlogDetailTypes, OpenApiEvent, Source } from "../../shared";
 
 interface CloudFormationStatus {
   "stack-id": string;
@@ -43,6 +44,9 @@ export const handler = async (
   const describeCommand = new DescribeStacksCommand({ StackName });
   const stacks = await cf.send(describeCommand);
   const stack = stacks.Stacks?.[0];
+  if (!stack) {
+    return;
+  }
   const ChangeSetName = stack?.ChangeSetId;
 
   const getChangeSets = async (NextToken?: string): Promise<boolean> => {
@@ -118,10 +122,13 @@ export const handler = async (
     const oas = Buffer.from(exportRes.body!.buffer).toString();
     apiSpecs[`${restApiId}-${stageName}`] = JSON.parse(oas);
   }
+  if (Object.keys(apiSpecs).length === 0) {
+    return;
+  }
 
   const fileLoc = {
     Bucket: process.env.SPEC_BUCKET,
-    Key: `${StackName}/specs.json`,
+    Key: `openapi/${StackName}/specs.json`,
   };
 
   const putObjectCommand = new PutObjectCommand({
@@ -135,16 +142,18 @@ export const handler = async (
   });
   const url = await getSignedUrl(s3, getObjectCommand, { expiresIn: 60 * 60 });
 
-  const fwdEvent = {};
+  const eventDetail: OpenApiEvent = {
+    stackName: stack.StackName || StackName,
+    apiSpecs: Object.keys(apiSpecs).length,
+    url,
+  };
 
   const putEvent = new PutEventsCommand({
     Entries: [
       {
-        Source: "blog.dev.portal",
-        DetailType: "spec.openapi",
-        Detail: JSON.stringify({
-          openApiSpecs: url,
-        }),
+        Source,
+        DetailType: BlogDetailTypes.OPEN_API,
+        Detail: JSON.stringify(eventDetail),
       },
     ],
   });
