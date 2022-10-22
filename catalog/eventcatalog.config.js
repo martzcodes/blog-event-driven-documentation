@@ -33,6 +33,12 @@ module.exports = {
       role: 'Developer',
     },
     {
+      id: 'mSmith',
+      name: 'Matthew Smith',
+      avatarUrl: 'https://randomuser.me/api/portraits/lego/3.jpg',
+      role: 'Developer',
+    },
+    {
       id: 'martzcodes',
       name: 'Matthew Martz',
       avatarUrl: 'https://pbs.twimg.com/profile_images/1463978501120438278/JjNr_zM9_400x400.jpg',
