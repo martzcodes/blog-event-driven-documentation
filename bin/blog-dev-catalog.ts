@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { BlogDevCatalogStack } from '../lib/blog-dev-catalog-watcher-stack';
+import { BlogDevCatalogStack } from '../lib/watcher/blog-dev-catalog-watcher-stack';
 
 const app = new cdk.App();
 new BlogDevCatalogStack(app, 'BlogDevCatalogStack', {

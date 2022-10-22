@@ -1,6 +1,6 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { Catalog } from './catalog';
+import { Catalog } from './catalog-construct';
 
 export interface BlogDevCatalogStackProps extends StackProps {
   hostDomain?: string;
