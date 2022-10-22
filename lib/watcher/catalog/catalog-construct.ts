@@ -87,6 +87,7 @@ export class Catalog extends Construct {
     };
     const uiPath = join(__dirname, `../../../catalog/out`);
     const bundle = Source.asset(uiPath, {
+      assetHash: `${Date.now()}`,
       bundling: {
         command: ["sh", "-c", 'echo "Not Used"'],
         image: DockerImage.fromRegistry("alpine"), // required but not used
