@@ -6,7 +6,7 @@
   },
   "scripts": {
     "clean": "rimraf cdk.out catalog/out && mkdir -p catalog/out",
-    "deploy": "npm run clean && cdk deploy",
+    "deploy": "npm run clean && cdk deploy --all",
     "synth": "npm run clean && cdk synth",
     "prepare:catalog": "ts-node ./lib/prepare",
     "test": "jest",

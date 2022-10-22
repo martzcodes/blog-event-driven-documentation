@@ -14,12 +14,7 @@ export class AccountStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
-      lifecycleRules: [
-        {
-          abortIncompleteMultipartUploadAfter: Duration.minutes(30),
-          expiration: Duration.days(7),
-        },
-      ],
+      lifecycleRules: [ { expiration: Duration.days(7), }, ],
       autoDeleteObjects: true,
     });
 
