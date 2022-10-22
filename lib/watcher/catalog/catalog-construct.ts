@@ -36,7 +36,7 @@ export class Catalog extends Construct {
     );
     destinationBucket.grantRead(originAccessIdentity);
 
-    const domainName = `catalog.${hostDomain}`;
+    const domainName = `docs.${hostDomain}`;
     const hostedZone = HostedZone.fromLookup(this, `UIZone`, {
       domainName: hostDomain,
     });
