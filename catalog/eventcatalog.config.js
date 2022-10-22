@@ -1,6 +1,6 @@
 module.exports = {
   title: 'martzcodes dev catalog',
-  tagline: 'Discover, Explore and Document your Event Driven Architectures',
+  tagline: 'Discover, Explore and Document your API Gateway and Event Driven Architectures',
   organizationName: 'martzcodes',
   projectName: 'dev catalog',
   editUrl: 'https://github.com/martzcodes/blog-dev-catalog/edit/main/catalog',
@@ -10,8 +10,8 @@ module.exports = {
     href: '/events'
   },
   secondaryCTA: {
-    label: 'Getting Started',
-    href:"https://www.eventcatalog.dev/"
+    label: 'Read More',
+    href:"https://matt.martz.codes/"
   },
   logo: {
     alt: 'martzcodes dev catalog Logo',
