@@ -59,7 +59,6 @@ export class WatcherSpecConstruct extends Construct {
     });
     this.specBucket.grantWrite(fn);
     fn.addEnvironment("SPEC_BUCKET", this.specBucket.bucketName);
-    this.bus.grantPutEventsTo(fn);
 
     new Rule(this, `${lambdaName}Rule`, {
       eventBus: this.bus,

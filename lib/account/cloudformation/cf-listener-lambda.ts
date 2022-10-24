@@ -47,7 +47,6 @@ export const handler = async (
     return;
   }
   const ChangeSetName = stack?.ChangeSetId;
-
   const getChangeSets = async (NextToken?: string): Promise<boolean> => {
     const changeSet = await cf.send(
       new DescribeChangeSetCommand({

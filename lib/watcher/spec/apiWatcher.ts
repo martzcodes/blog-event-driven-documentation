@@ -5,7 +5,9 @@ import { OpenApiEvent } from "../../shared";
 
 const s3 = new S3Client({});
 
-export const handler = async (event: EventBridgeEvent<string, OpenApiEvent>) => {
+export const handler = async (
+  event: EventBridgeEvent<string, OpenApiEvent>
+) => {
   const res = await fetch(event.detail.url);
   const specs = (await res.json()) as Record<string, any>;
 

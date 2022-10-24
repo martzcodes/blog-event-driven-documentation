@@ -28,19 +28,24 @@ export class CFListener extends Construct {
     const { bus, specBucket } = props;
 
     const cfFn = new NodejsFunction(this, `cfStatusFn`, {
-        runtime: Runtime.NODEJS_16_X,
-        entry: join(__dirname, `./cf-listener-lambda.ts`),
-        logRetention: RetentionDays.ONE_DAY,
-        initialPolicy: [
-          new PolicyStatement({
-            effect: Effect.ALLOW,
-            actions: ['cloudformation:Describe*', 'cloudformation:Get*', 'cloudformation:List*', 'apigateway:Get*'],
-            resources: ['*']
-          }),
-        ],
+      runtime: Runtime.NODEJS_16_X,
+      entry: join(__dirname, `./cf-listener-lambda.ts`),
+      logRetention: RetentionDays.ONE_DAY,
+      initialPolicy: [
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: [
+            "cloudformation:Describe*",
+            "cloudformation:Get*",
+            "cloudformation:List*",
+            "apigateway:Get*",
+          ],
+          resources: ["*"],
+        }),
+      ],
     });
     specBucket.grantReadWrite(cfFn);
-    cfFn.addEnvironment('SPEC_BUCKET', specBucket.bucketName);
+    cfFn.addEnvironment("SPEC_BUCKET", specBucket.bucketName);
     bus.grantPutEventsTo(cfFn);
 
     new Rule(this, `cfRule`, {
@@ -54,7 +59,7 @@ export class CFListener extends Construct {
           },
         },
       },
-      targets: [new LambdaFunction(cfFn)]
+      targets: [new LambdaFunction(cfFn)],
     });
   }
 }

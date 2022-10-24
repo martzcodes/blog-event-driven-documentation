@@ -1,6 +1,6 @@
 import { Duration, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { EventBus, Rule } from "aws-cdk-lib/aws-events";
-import { AccountPrincipal } from "aws-cdk-lib/aws-iam";
+import { EventBus as EventBusTarget } from "aws-cdk-lib/aws-events-targets";
 import { BlockPublicAccess, Bucket, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { Source } from "../shared";
@@ -16,13 +16,16 @@ export class AccountStack extends Stack {
 
     const bus = EventBus.fromEventBusName(this, `bus`, "default");
     const { watcherAccount } = props;
-    if (watcherAccount && watcherAccount !== Stack.of(this).account) {
-      new Rule(this, `WatcherFwd`, {
-        eventPattern: {
-          source: [Source],
-        }
-      });
-    }
+if (watcherAccount && watcherAccount !== Stack.of(this).account) {
+  new Rule(this, `WatcherFwd`, {
+    eventPattern: {
+      source: [Source],
+    },
+    targets: [new EventBusTarget(
+      EventBus.fromEventBusArn(this, `watcher-bus`, `arn:aws:events:${Stack.of(this).region}:${watcherAccount}:event-bus/default`)
+    )]
+  });
+}
 
     const specBucket = new Bucket(this, `AccountSpecBucket`, {
       removalPolicy: RemovalPolicy.DESTROY,
