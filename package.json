@@ -1,8 +1,8 @@
 {
-  "name": "blog-dev-catalog",
+  "name": "blog-event-driven-documentation",
   "version": "0.1.0",
   "bin": {
-    "blog-dev-catalog": "bin/blog-dev-catalog.js"
+    "blog-event-driven-documentation": "bin/blog-event-driven-documentation.js"
   },
   "scripts": {
     "clean": "rimraf cdk.out catalog/out && mkdir -p catalog/out",
