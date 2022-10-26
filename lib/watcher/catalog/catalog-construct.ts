@@ -93,6 +93,7 @@ export class Catalog extends Construct {
         image: DockerImage.fromRegistry("alpine"), // required but not used
         local: {
           tryBundle(outputDir: string) {
+            execSync("npm run prepare:catalog");
             execSync("cd catalog && npm i");
             execSync("cd catalog && npm run build");
             copySync(uiPath, outputDir, {
